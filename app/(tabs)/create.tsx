@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    TextInput,
-    Image,
-    Alert,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, TextInput } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 const CreatePage: React.FC = () => {
     const [imageUri, setImageUri] = useState<string | null>(null);
@@ -19,23 +10,21 @@ const CreatePage: React.FC = () => {
     const [time, setTime] = useState<string>('');
 
     // Function to pick an image
-    const pickImage = () => {
-        launchImageLibrary(
-            {
-                mediaType: 'photo',
-                quality: 1,
-            },
-            (response) => {
-                if (response.didCancel) {
-                    console.log('User canceled image picker');
-                } else if (response.errorCode) {
-                    Alert.alert('Error', response.errorMessage || 'Something went wrong');
-                } else if (response.assets && response.assets.length > 0) {
-                    const selectedImage = response.assets[0];
-                    setImageUri(selectedImage.uri || null);
-                }
-            }
-        );
+    const pickImage = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert('Permission Required', 'You need to enable permissions to access the photo library.');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
+        });
+
+        if (!result.canceled && result.assets) {
+            setImageUri(result.assets[0].uri);
+        }
     };
 
     const handleSubmit = () => {
@@ -64,17 +53,6 @@ const CreatePage: React.FC = () => {
                 <Text style={styles.location}>Austin</Text>
             </View>
 
-            {/* User Info */}
-            <View style={styles.userInfo}>
-                <Text style={styles.userName}>@user123</Text>
-                <TouchableOpacity>
-                    <Text style={styles.link}>edit profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <Text style={styles.link}>see friends</Text>
-                </TouchableOpacity>
-            </View>
-
             {/* Input Form */}
             <View style={styles.form}>
                 {/* Image Upload */}
@@ -83,7 +61,6 @@ const CreatePage: React.FC = () => {
                         <Image source={{ uri: imageUri }} style={styles.cardImage} />
                     ) : (
                         <>
-                            <Icon name="image" size={50} color="#fff" style={styles.cardIcon} />
                             <Text style={styles.cardText}>Tap to upload photo</Text>
                         </>
                     )}
@@ -156,22 +133,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#ff9f1c',
     },
-    userInfo: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    userName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#ff9f1c',
-    },
-    link: {
-        fontSize: 14,
-        color: '#007bff',
-        marginLeft: 10,
-    },
     form: {
         flex: 1,
         alignItems: 'center',
@@ -189,9 +150,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         borderRadius: 10,
-    },
-    cardIcon: {
-        marginBottom: 10,
     },
     cardText: {
         color: '#fff',

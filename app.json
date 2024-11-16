@@ -8,7 +8,12 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "platforms": ["ios", "android"],
     "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "We need your permission to access your photo library.",
+        "NSPhotoLibraryAddUsageDescription": "We need your permission to save photos to your library."
+      },
       "supportsTablet": true
     },
     "android": {
