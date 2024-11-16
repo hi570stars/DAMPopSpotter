@@ -1,18 +1,25 @@
 // This file is a fallback for using MaterialIcons on Android and web.
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Feather from '@expo/vector-icons/Feather';
 import { SymbolWeight } from 'expo-symbols';
 import React from 'react';
 import { OpaqueColorValue, StyleProp, ViewStyle } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { View } from 'react-native';
 
-// Add your SFSymbol to MaterialIcons mappings here.
 const MAPPING = {
-  // See MaterialIcons here: https://icons.expo.fyi
-  // See SF Symbols in the SF Symbols app on Mac.
   'house.fill': 'home',
   'paperplane.fill': 'send',
+  'user.fill': 'person',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+
+  // Add new icons here:
+  'compass.fill': 'explore',
+  'map.fill': 'map',
+  'add.circle.fill': 'add-circle',
+  'person.circle.fill': 'account-circle',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],
