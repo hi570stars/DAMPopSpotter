@@ -25,9 +25,12 @@ export default function TabTwoScreen() {
       <ThemedText>This app includes example code to help you get started.</ThemedText>
       <Collapsible title="File-based routing">
         <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
+          This app has five screens:{' '}
+          <ThemedText type="defaultSemiBold">app/(tabs)/home.tsx</ThemedText> and{' '}
+          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText> and{' '}
+          <ThemedText type="defaultSemiBold">app/(tabs)/map.tsx</ThemedText> and{' '}
+          <ThemedText type="defaultSemiBold">app/(tabs)/create.tsx</ThemedText> and{' '}
+          <ThemedText type="defaultSemiBold">app/(tabs)/user.tsx</ThemedText>
         </ThemedText>
         <ThemedText>
           The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
