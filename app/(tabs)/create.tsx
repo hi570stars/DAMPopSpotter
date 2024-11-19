@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, TextInput } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    TextInput,
+    Image,
+    Alert,
+    Platform,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DatePicker from 'react-datepicker'; // For web
+import 'react-datepicker/dist/react-datepicker.css'; // For web styling
 
 const CreatePage: React.FC = () => {
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
     const [link, setLink] = useState<string>('');
     const [location, setLocation] = useState<string>('');
-    const [time, setTime] = useState<string>('');
+    const [time, setTime] = useState<Date | null>(null);
+    const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     // Function to pick an image
     const pickImage = async () => {
@@ -27,6 +40,13 @@ const CreatePage: React.FC = () => {
         }
     };
 
+    // Function to handle date selection
+    const handleDateChange = (selectedDate: Date) => {
+        setShowDatePicker(false);
+        setTime(selectedDate); // Save the selected date
+    };
+
+    // Function to handle form submission
     const handleSubmit = () => {
         if (!title || !location || !time) {
             Alert.alert('Error', 'Please fill in all required fields.');
@@ -38,7 +58,7 @@ const CreatePage: React.FC = () => {
             title,
             link,
             location,
-            time,
+            time: time.toISOString(), // Convert to ISO string for consistency
         };
 
         console.log('New Pop-Up:', newPopUp);
@@ -61,6 +81,7 @@ const CreatePage: React.FC = () => {
                         <Image source={{ uri: imageUri }} style={styles.cardImage} />
                     ) : (
                         <>
+                            <Text style={styles.cardIcon}>📷</Text>
                             <Text style={styles.cardText}>Tap to upload photo</Text>
                         </>
                     )}
@@ -93,14 +114,38 @@ const CreatePage: React.FC = () => {
                     onChangeText={setLocation}
                 />
 
-                {/* Time Input */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Time (e.g., 2024-11-16 18:00)"
-                    placeholderTextColor="#aaa"
-                    value={time}
-                    onChangeText={setTime}
-                />
+                {/* Date/Time Picker */}
+                {Platform.OS === 'web' ? (
+                    <DatePicker
+                        selected={time}
+                        onChange={(date: Date) => setTime(date)}
+                        showTimeSelect
+                        dateFormat="Pp"
+                        className="react-datepicker-input"
+                    />
+                ) : (
+                    <>
+                        <TouchableOpacity
+                            style={styles.input}
+                            onPress={() => setShowDatePicker(true)}
+                        >
+                            <Text style={{ color: time ? '#000' : '#aaa' }}>
+                                {time
+                                    ? time.toLocaleString('en-US', {
+                                          dateStyle: 'medium',
+                                          timeStyle: 'short',
+                                      })
+                                    : 'Select Date & Time'}
+                            </Text>
+                        </TouchableOpacity>
+                        <DateTimePickerModal
+                            isVisible={showDatePicker}
+                            mode="datetime"
+                            onConfirm={handleDateChange}
+                            onCancel={() => setShowDatePicker(false)}
+                        />
+                    </>
+                )}
             </View>
 
             {/* Submit Button */}
@@ -151,6 +196,10 @@ const styles = StyleSheet.create({
         height: '100%',
         borderRadius: 10,
     },
+    cardIcon: {
+        fontSize: 50,
+        marginBottom: 10,
+    },
     cardText: {
         color: '#fff',
         fontSize: 14,
@@ -165,6 +214,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 16,
         marginBottom: 15,
+        justifyContent: 'center',
     },
     addButton: {
         width: 100,

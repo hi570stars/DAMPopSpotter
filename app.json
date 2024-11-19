@@ -8,7 +8,6 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "platforms": ["ios", "android"],
     "ios": {
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "We need your permission to access your photo library.",
