@@ -7,37 +7,46 @@ import {
     TextInput,
     Image,
     Alert,
+    Platform,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DatePicker from 'react-datepicker'; // For web
+import 'react-datepicker/dist/react-datepicker.css'; // For web styling
 
 const CreatePage: React.FC = () => {
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
     const [link, setLink] = useState<string>('');
     const [location, setLocation] = useState<string>('');
-    const [time, setTime] = useState<string>('');
+    const [time, setTime] = useState<Date | null>(null);
+    const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     // Function to pick an image
-    const pickImage = () => {
-        launchImageLibrary(
-            {
-                mediaType: 'photo',
-                quality: 1,
-            },
-            (response) => {
-                if (response.didCancel) {
-                    console.log('User canceled image picker');
-                } else if (response.errorCode) {
-                    Alert.alert('Error', response.errorMessage || 'Something went wrong');
-                } else if (response.assets && response.assets.length > 0) {
-                    const selectedImage = response.assets[0];
-                    setImageUri(selectedImage.uri || null);
-                }
-            }
-        );
+    const pickImage = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert('Permission Required', 'You need to enable permissions to access the photo library.');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
+        });
+
+        if (!result.canceled && result.assets) {
+            setImageUri(result.assets[0].uri);
+        }
     };
 
+    // Function to handle date selection
+    const handleDateChange = (selectedDate: Date) => {
+        setShowDatePicker(false);
+        setTime(selectedDate); // Save the selected date
+    };
+
+    // Function to handle form submission
     const handleSubmit = () => {
         if (!title || !location || !time) {
             Alert.alert('Error', 'Please fill in all required fields.');
@@ -49,7 +58,7 @@ const CreatePage: React.FC = () => {
             title,
             link,
             location,
-            time,
+            time: time.toISOString(), // Convert to ISO string for consistency
         };
 
         console.log('New Pop-Up:', newPopUp);
@@ -64,17 +73,6 @@ const CreatePage: React.FC = () => {
                 <Text style={styles.location}>Austin</Text>
             </View>
 
-            {/* User Info */}
-            <View style={styles.userInfo}>
-                <Text style={styles.userName}>@user123</Text>
-                <TouchableOpacity>
-                    <Text style={styles.link}>edit profile</Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <Text style={styles.link}>see friends</Text>
-                </TouchableOpacity>
-            </View>
-
             {/* Input Form */}
             <View style={styles.form}>
                 {/* Image Upload */}
@@ -83,7 +81,7 @@ const CreatePage: React.FC = () => {
                         <Image source={{ uri: imageUri }} style={styles.cardImage} />
                     ) : (
                         <>
-                            <Icon name="image" size={50} color="#fff" style={styles.cardIcon} />
+                            <Text style={styles.cardIcon}>📷</Text>
                             <Text style={styles.cardText}>Tap to upload photo</Text>
                         </>
                     )}
@@ -116,14 +114,38 @@ const CreatePage: React.FC = () => {
                     onChangeText={setLocation}
                 />
 
-                {/* Time Input */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Time (e.g., 2024-11-16 18:00)"
-                    placeholderTextColor="#aaa"
-                    value={time}
-                    onChangeText={setTime}
-                />
+                {/* Date/Time Picker */}
+                {Platform.OS === 'web' ? (
+                    <DatePicker
+                        selected={time}
+                        onChange={(date: Date) => setTime(date)}
+                        showTimeSelect
+                        dateFormat="Pp"
+                        className="react-datepicker-input"
+                    />
+                ) : (
+                    <>
+                        <TouchableOpacity
+                            style={styles.input}
+                            onPress={() => setShowDatePicker(true)}
+                        >
+                            <Text style={{ color: time ? '#000' : '#aaa' }}>
+                                {time
+                                    ? time.toLocaleString('en-US', {
+                                          dateStyle: 'medium',
+                                          timeStyle: 'short',
+                                      })
+                                    : 'Select Date & Time'}
+                            </Text>
+                        </TouchableOpacity>
+                        <DateTimePickerModal
+                            isVisible={showDatePicker}
+                            mode="datetime"
+                            onConfirm={handleDateChange}
+                            onCancel={() => setShowDatePicker(false)}
+                        />
+                    </>
+                )}
             </View>
 
             {/* Submit Button */}
@@ -156,22 +178,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#ff9f1c',
     },
-    userInfo: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    userName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#ff9f1c',
-    },
-    link: {
-        fontSize: 14,
-        color: '#007bff',
-        marginLeft: 10,
-    },
     form: {
         flex: 1,
         alignItems: 'center',
@@ -191,6 +197,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     cardIcon: {
+        fontSize: 50,
         marginBottom: 10,
     },
     cardText: {
@@ -207,6 +214,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         fontSize: 16,
         marginBottom: 15,
+        justifyContent: 'center',
     },
     addButton: {
         width: 100,
