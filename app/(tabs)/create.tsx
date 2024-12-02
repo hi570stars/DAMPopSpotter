@@ -116,14 +116,16 @@ const CreatePage: React.FC = () => {
 
                 {/* Date/Time Picker */}
                 {Platform.OS === 'web' ? (
-                    <DatePicker
-                        selected={time}
-                        onChange={(date: Date) => setTime(date)}
-                        showTimeSelect
-                        dateFormat="Pp"
-                        className="react-datepicker-input"
-                    />
-                ) : (
+                <DatePicker
+                    selected={time}
+                    onChange={(date) => {
+                        setTime(date as Date); // Use a type assertion to assume `date` is of type `Date`
+                    }}
+                    showTimeSelect
+                    dateFormat="Pp"
+                    className="react-datepicker-input"
+                />
+            ) : (
                     <>
                         <TouchableOpacity
                             style={styles.input}
