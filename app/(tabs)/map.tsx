@@ -38,7 +38,7 @@ const MapPage = () => {
         description: "Turtle Pond",
         latitude: 30.2869,
         longitude: -97.7395,
-        icon: 'Misc'
+        icon: 'misc'
       },
       {
         id: 2,
@@ -46,7 +46,7 @@ const MapPage = () => {
         description: "Mock description",
         latitude: 30.2675,
         longitude: -97.7435,
-        icon: 'Thrift'
+        icon: 'thrift'
       },
       {
         id: 3,
@@ -54,7 +54,7 @@ const MapPage = () => {
         description: "Mock description",
         latitude: 30.2677,
         longitude: -97.7435,
-        icon: 'Food'
+        icon: 'food'
       },
       {
         id: 4,
@@ -62,7 +62,7 @@ const MapPage = () => {
         description: "Mock description",
         latitude: 30.2673,
         longitude: -97.7435,
-        icon: 'Market'
+        icon: 'market'
       },
       {
         id: 5,
@@ -70,7 +70,7 @@ const MapPage = () => {
         description: "Band performance.",
         latitude: 30.295521,
         longitude: -97.741753,
-        icon: 'Music'
+        icon: 'music'
       },
     ];
     setLocations(mockLocations);

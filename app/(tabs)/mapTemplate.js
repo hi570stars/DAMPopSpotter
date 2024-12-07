@@ -1,5 +1,3 @@
-// src/mapTemplate.js (Final Version with Enhanced Error Handling)
-
 export const mapTemplate = `
 <!DOCTYPE html>
 <html>
@@ -41,23 +39,72 @@ export const mapTemplate = `
     try {
       const map = L.map('map').setView([30.2850, -97.7335], 15); // Austin, Texas coordinates
 
-      // Add OpenStreetMap tile layer
+      // Add a slightly minimalistic tile layer (CartoDB Positron Hybrid)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19,
+      }).addTo(map);
+
+      // Add underlying terrain from OpenStreetMap
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap contributors',
       }).addTo(map);
 
       // Send status message to React Native
       window.ReactNativeWebView.postMessage(JSON.stringify({ status: 'Map Initialized' }));
 
-      // Function to add markers
+      // Function to add markers with custom icons
       function addMarkers(locations) {
         if (!locations || !Array.isArray(locations)) {
           console.error('Invalid locations data');
           window.ReactNativeWebView.postMessage(JSON.stringify({ error: 'Invalid locations data' }));
           return;
         }
+
+        const iconMapping = {
+          music: L.icon({
+            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconSize: [40, 40], // Increased size
+            iconAnchor: [20, 40], // Adjust anchor accordingly
+            popupAnchor: [0, -40],
+          }),
+          market: L.icon({
+            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconSize: [40, 40], // Increased size
+            iconAnchor: [20, 40], // Adjust anchor accordingly
+            popupAnchor: [0, -40],
+          }),
+          thrift: L.icon({
+            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconSize: [40, 40], // Increased size
+            iconAnchor: [20, 40], // Adjust anchor accordingly
+            popupAnchor: [0, -40],
+          }),
+          food: L.icon({
+            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconSize: [40, 40], // Increased size
+            iconAnchor: [20, 40], // Adjust anchor accordingly
+            popupAnchor: [0, -40],
+          }),
+          misc: L.icon({
+            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconSize: [40, 40], // Increased size
+            iconAnchor: [20, 40], // Adjust anchor accordingly
+            popupAnchor: [0, -40],
+          }),
+          default: L.icon({
+            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconSize: [40, 40], // Increased size
+            iconAnchor: [20, 40], // Adjust anchor accordingly
+            popupAnchor: [0, -40],
+          }),
+        };
+
         locations.forEach(location => {
-          const marker = L.marker([location.latitude, location.longitude]).addTo(map);
+          const icon = iconMapping[location.icon] || iconMapping.default;
+
+          const marker = L.marker([location.latitude, location.longitude], { icon }).addTo(map);
           marker.bindPopup('<div class="popup-content"><strong>' + location.title + '</strong><br>' + location.description + '</div>');
 
           marker.on('click', () => {
