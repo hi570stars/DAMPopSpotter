@@ -37,16 +37,20 @@ export const mapTemplate = `
 
     // Initialize the map
     try {
-      const map = L.map('map', { zoomControl: false }).setView([30.2850, -97.7335], 15); // Disable zoom controls
+      const bounds = [
+        [29.5, -98.2], // Southwest corner (latitude, longitude)
+        [30.9, -97.2]  // Northeast corner (latitude, longitude)
+      ];
 
-      // Add a slightly minimalistic tile layer (CartoDB Positron Hybrid)
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd',
-        maxZoom: 19,
-      }).addTo(map);
+      const map = L.map('map', {
+        zoomControl: false,
+        maxBounds: bounds, // Restrict map panning to bounds
+        maxBoundsViscosity: 1.0 // Prevent dragging out of bounds
+      }).setView([30.2850, -97.7335], 14); // Set initial center and zoom
 
-      // Add underlying terrain from OpenStreetMap
+      // Add OpenStreetMap Standard tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        minZoom: 10,
         maxZoom: 19,
       }).addTo(map);
 
@@ -61,7 +65,6 @@ export const mapTemplate = `
           return;
         }
 
-        // Custom icons for markers
         const iconMapping = {
           music: L.icon({
             iconUrl: 'https://i.imgur.com/2KREiK8.png',
