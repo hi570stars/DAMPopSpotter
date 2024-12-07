@@ -32,35 +32,34 @@ export default function TabLayout() {
           title: 'Home',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="map"
-        options={{
-          title: 'Map',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="create"
-        options={{
-          title: 'Create',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="user"
-        options={{
-          title: 'User',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+      /><Tabs.Screen
+      name="explore"
+      options={{
+        title: 'Explore',
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="compass.fill" color={color} />,
+      }}
+    />
+    <Tabs.Screen
+      name="map"
+      options={{
+        title: 'Map',
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
+      }}
+    />
+    <Tabs.Screen
+      name="create"
+      options={{
+        title: 'Create',
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="add.circle.fill" color={color} />,
+      }}
+    />
+    <Tabs.Screen
+      name="user"
+      options={{
+        title: 'User',
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.circle.fill" color={color} />,
+      }}
+    />    
     </Tabs>
   );
 }
