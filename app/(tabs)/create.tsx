@@ -102,7 +102,7 @@ const CreatePage: React.FC = () => {
         <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
-                <Text style={styles.logo}>Popspoter</Text>
+                <Text style={styles.logo}>Popspotter</Text>
             </View>
 
             {/* Input Form */}
