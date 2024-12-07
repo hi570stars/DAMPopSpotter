@@ -102,8 +102,7 @@ const CreatePage: React.FC = () => {
         <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
-                <Text style={styles.logo}>Popspot</Text>
-                <Text style={styles.location}>Create</Text>
+                <Text style={styles.logo}>Popspoter</Text>
             </View>
 
             {/* Input Form */}
@@ -225,7 +224,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
+        marginTop: 45
     },
     logo: {
         fontSize: 24,
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 10,
         fontSize: 16,
-        marginBottom: 15,
+        marginBottom: 5,
         justifyContent: 'center',
     },
     addButton: {
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        marginBottom: 20,
+        marginBottom: 100,
     },
     addButtonText: {
         fontSize: 18,

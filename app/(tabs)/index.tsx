@@ -1,74 +1,78 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Image, StyleSheet, FlatList, Dimensions, Text } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const { height, width } = Dimensions.get('window');
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+const exploreItems = [
+    {
+        id: '1',
+        source: require('../../assets/images/home.png'),
+        caption: 'Discover the beauty of nature',
+    },
+    // {
+    //     id: '2',
+    //     source: require('../../assets/images/explore2.png'),
+    //     caption: 'Explore the vibrant cityscapes',
+    // },
+    // {
+    //     id: '3',
+    //     source: require('./path-to-your-image3.jpg'),
+    //     caption: 'Dive into the serene beaches',
+    // },
+];
+
+const ExplorePage: React.FC = () => {
+    const renderItem = ({ item }: { item: { id: string; source: any; caption: string } }) => (
+        <View style={styles.itemContainer}>
+            <Image source={item.source} style={styles.image} resizeMode="cover" />
+            <View style={styles.overlay}>
+                <Text style={styles.caption}>{item.caption}</Text>
+            </View>
+        </View>
+    );
+
+    return (
+        <FlatList
+            data={exploreItems}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            pagingEnabled
+            showsVerticalScrollIndicator={false}
+            style={styles.container}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+    );
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#000', // Dark background for an immersive experience
+    },
+    itemContainer: {
+        height, // Full-screen height for each item
+        width,  // Full-screen width for each item
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    image: {
+        height: '100%',
+        width: '100%',
+    },
+    overlay: {
+        position: 'absolute',
+        bottom: 30,
+        left: 20,
+        right: 20,
+        padding: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        borderRadius: 8,
+    },
+    caption: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });
+
+export default ExplorePage;
