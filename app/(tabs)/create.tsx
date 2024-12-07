@@ -7,6 +7,8 @@ import {
     TextInput,
     Image,
     Alert,
+    FlatList,
+    TouchableWithoutFeedback,
     Platform,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
@@ -14,11 +16,16 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DatePicker from 'react-datepicker'; // For web
 import 'react-datepicker/dist/react-datepicker.css'; // For web styling
 
+const OPENCAGE_API_KEY = '65fee95c25e447cc9f1badc7b478c37d'; // Replace with your OpenCage API key
+const API_URL = `https://api.opencagedata.com/geocode/v1/json`;
+
 const CreatePage: React.FC = () => {
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
     const [link, setLink] = useState<string>('');
     const [location, setLocation] = useState<string>('');
+    const [coordinates, setCoordinates] = useState<{ lat: number; lon: number } | null>(null);
+    const [suggestions, setSuggestions] = useState<any[]>([]);
     const [time, setTime] = useState<Date | null>(null);
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
@@ -40,10 +47,35 @@ const CreatePage: React.FC = () => {
         }
     };
 
-    // Function to handle date selection
-    const handleDateChange = (selectedDate: Date) => {
-        setShowDatePicker(false);
-        setTime(selectedDate); // Save the selected date
+    // Function to fetch location suggestions using OpenCage API
+    const fetchLocationSuggestions = async (query: string) => {
+        if (!query) {
+            setSuggestions([]);
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `${API_URL}?q=${encodeURIComponent(query)}&key=${OPENCAGE_API_KEY}&limit=5`
+            );
+            const data = await response.json();
+
+            if (data && data.results) {
+                setSuggestions(data.results);
+            }
+        } catch (error) {
+            console.error('Error fetching location suggestions:', error);
+        }
+    };
+
+    // Function to handle selecting a location from suggestions
+    const handleLocationSelect = (suggestion: any) => {
+        setLocation(suggestion.formatted); // Set the formatted address
+        setCoordinates({
+            lat: suggestion.geometry.lat,
+            lon: suggestion.geometry.lng,
+        }); // Set coordinates
+        setSuggestions([]); // Clear suggestions after selection
     };
 
     // Function to handle form submission
@@ -58,6 +90,7 @@ const CreatePage: React.FC = () => {
             title,
             link,
             location,
+            coordinates,
             time: time.toISOString(), // Convert to ISO string for consistency
         };
 
@@ -69,8 +102,7 @@ const CreatePage: React.FC = () => {
         <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
-                <Text style={styles.logo}>Popspot</Text>
-                <Text style={styles.location}>Austin</Text>
+                <Text style={styles.logo}>Popspoter</Text>
             </View>
 
             {/* Input Form */}
@@ -105,20 +137,43 @@ const CreatePage: React.FC = () => {
                     onChangeText={setLink}
                 />
 
-                {/* Location Input */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Location"
-                    placeholderTextColor="#aaa"
-                    value={location}
-                    onChangeText={setLocation}
-                />
+                {/* Location Input with Autocomplete */}
+                <View style={styles.autocompleteContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Location"
+                        placeholderTextColor="#aaa"
+                        value={location}
+                        onChangeText={(text) => {
+                            setLocation(text);
+                            fetchLocationSuggestions(text); // Fetch suggestions on text input
+                        }}
+                    />
+                    {suggestions.length > 0 && (
+                        <FlatList
+                            data={suggestions}
+                            keyExtractor={(item, index) => `${item.geometry.lat}-${index}`}
+                            renderItem={({ item }) => (
+                                <TouchableWithoutFeedback
+                                    onPress={() => handleLocationSelect(item)}
+                                >
+                                    <View style={styles.suggestionItem}>
+                                        <Text>{item.formatted}</Text>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            )}
+                            style={styles.suggestionsList}
+                        />
+                    )}
+                </View>
 
                 {/* Date/Time Picker */}
                 {Platform.OS === 'web' ? (
                     <DatePicker
                         selected={time}
-                        onChange={(date: Date) => setTime(date)}
+                        onChange={(date) => {
+                            setTime(date as Date); // Use a type assertion to assume `date` is of type `Date`
+                        }}
                         showTimeSelect
                         dateFormat="Pp"
                         className="react-datepicker-input"
@@ -141,7 +196,10 @@ const CreatePage: React.FC = () => {
                         <DateTimePickerModal
                             isVisible={showDatePicker}
                             mode="datetime"
-                            onConfirm={handleDateChange}
+                            onConfirm={(date) => {
+                                setTime(date);
+                                setShowDatePicker(false);
+                            }}
                             onCancel={() => setShowDatePicker(false)}
                         />
                     </>
@@ -166,7 +224,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
+        marginTop: 45
     },
     logo: {
         fontSize: 24,
@@ -213,7 +272,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 10,
         fontSize: 16,
-        marginBottom: 15,
+        marginBottom: 5,
         justifyContent: 'center',
     },
     addButton: {
@@ -224,12 +283,32 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
-        marginBottom: 20,
+        marginBottom: 100,
     },
     addButtonText: {
         fontSize: 18,
         color: '#fff',
+        
+    },
+    autocompleteContainer: {
+        position: 'relative',
+        width: '90%',
+    },
+    suggestionsList: {
+        maxHeight: 150,
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 8,
+        marginTop: -10,
+        zIndex: 1, // Ensure the suggestions list is above other components
+    },
+    suggestionItem: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
     },
 });
+
 
 export default CreatePage;
