@@ -15,6 +15,8 @@ import * as ImagePicker from 'expo-image-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DatePicker from 'react-datepicker'; // For web
 import 'react-datepicker/dist/react-datepicker.css'; // For web styling
+import RNPickerSelect from 'react-native-picker-select';
+
 
 const OPENCAGE_API_KEY = '65fee95c25e447cc9f1badc7b478c37d'; // Replace with your OpenCage API key
 const API_URL = `https://api.opencagedata.com/geocode/v1/json`;
@@ -27,6 +29,11 @@ const CreatePage: React.FC = () => {
     const [coordinates, setCoordinates] = useState<{ lat: number; lon: number } | null>(null);
     const [suggestions, setSuggestions] = useState<any[]>([]);
     const [time, setTime] = useState<Date | null>(null);
+    const [category, setCategory] = useState<string>('Categories'); // Default category
+    const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false); // Dropdown visibility
+
+    
+
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     // Function to pick an image
@@ -92,6 +99,7 @@ const CreatePage: React.FC = () => {
             location,
             coordinates,
             time: time.toISOString(), // Convert to ISO string for consistency
+            category, // Include the selected category
         };
 
         console.log('New Pop-Up:', newPopUp);
@@ -105,6 +113,10 @@ const CreatePage: React.FC = () => {
                 <Text style={styles.logo}>Popspotter</Text>
             </View>
 
+            <View>
+                <Text style={styles.title}>Create a new Pop Up event</Text>
+            </View>
+
             {/* Input Form */}
             <View style={styles.form}>
                 {/* Image Upload */}
@@ -113,7 +125,10 @@ const CreatePage: React.FC = () => {
                         <Image source={{ uri: imageUri }} style={styles.cardImage} />
                     ) : (
                         <>
-                            <Text style={styles.cardIcon}>📷</Text>
+                            <Image
+                                source={require('../../assets/images/camera-icon.png')} // Replace with your location icon path
+                                style={styles.detailIcon}
+                            />
                             <Text style={styles.cardText}>Tap to upload photo</Text>
                         </>
                     )}
@@ -137,10 +152,39 @@ const CreatePage: React.FC = () => {
                     onChangeText={setLink}
                 />
 
+                <View style={styles.formItem}>
+                    {/* <Text style={styles.formLabel}>Category:</Text> */}
+                    <TouchableOpacity
+                        style={styles.input1}
+                        onPress={() => setIsDropdownVisible(!isDropdownVisible)}
+                    >
+                        <Text style={{ color: category === 'Categories' ? '#aaa' : '#000', fontSize: 16 }}>
+                            {category || 'Select Category'}
+                        </Text>
+                    </TouchableOpacity>
+
+                    {isDropdownVisible && (
+                        <View style={styles.dropdown}>
+                            {['Thrift', 'Music', 'Food', 'Market', 'Misc'].map((item) => (
+                                <TouchableOpacity
+                                    key={item}
+                                    style={styles.dropdownItem}
+                                    onPress={() => {
+                                        setCategory(item);
+                                        setIsDropdownVisible(false);
+                                    }}
+                                >
+                                    <Text style={styles.dropdownItemText}>{item}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
+                </View>
+
                 {/* Location Input with Autocomplete */}
                 <View style={styles.autocompleteContainer}>
                     <TextInput
-                        style={styles.input}
+                        style={styles.input1}
                         placeholder="Location"
                         placeholderTextColor="#aaa"
                         value={location}
@@ -205,6 +249,11 @@ const CreatePage: React.FC = () => {
                     </>
                 )}
             </View>
+            {/* Category Dropdown */}
+            
+
+
+
 
             {/* Submit Button */}
             <TouchableOpacity style={styles.addButton} onPress={handleSubmit}>
@@ -217,7 +266,7 @@ const CreatePage: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FADFDF',
         padding: 10,
     },
     header: {
@@ -231,6 +280,13 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         color: '#ff9f1c',
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#000',
+        textAlign: "center",
+        marginBottom: 30
     },
     location: {
         fontSize: 18,
@@ -248,7 +304,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 30,
     },
     cardImage: {
         width: '100%',
@@ -260,7 +316,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     cardText: {
-        color: '#fff',
+        color: '#000',
         fontSize: 14,
         textAlign: 'center',
     },
@@ -268,7 +324,7 @@ const styles = StyleSheet.create({
         width: '90%',
         height: 50,
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: '#bbb',
         borderRadius: 8,
         paddingHorizontal: 10,
         fontSize: 16,
@@ -290,9 +346,21 @@ const styles = StyleSheet.create({
         color: '#fff',
         
     },
+    input1: {
+        width: '100%',
+        height: 50,
+        borderWidth: 1,
+        borderColor: '#bbb',
+        borderRadius: 8,
+        paddingHorizontal: 10,
+        fontSize: 16,
+        marginBottom: 5,
+        justifyContent: 'center',
+    },
     autocompleteContainer: {
         position: 'relative',
         width: '90%',
+        
     },
     suggestionsList: {
         maxHeight: 150,
@@ -308,6 +376,39 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
     },
+    detailIcon: {
+        width: 50,
+        height: 40,
+        margin: 10,
+    },
+    formItem: {
+        width: '90%',
+        // marginBottom: 15,
+        // marginLeft: 16
+    },
+    dropdown: {
+        width: '90%',
+        backgroundColor: '#f9f9f9',
+        borderWidth: 1,
+        borderColor: '#bbb',
+        borderRadius: 8,
+        marginTop: 5,
+        zIndex: 1000,
+        position: 'absolute',
+    },
+    dropdownItem: {
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    dropdownItemText: {
+        fontSize: 16,
+        color: '#000',
+    },
+  
+    
+      
 });
 
 

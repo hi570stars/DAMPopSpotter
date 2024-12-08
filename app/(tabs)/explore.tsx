@@ -1,98 +1,82 @@
-// import React from 'react';
-// import { View, Image, StyleSheet, FlatList, Dimensions, Text } from 'react-native';
-
-// const { height, width } = Dimensions.get('window');
-
-// const exploreItems = [
-//     {
-//         id: '1',
-//         source: require('../../assets/images/explore1.png'),
-//         caption: 'Discover the beauty of nature',
-//     },
-//     {
-//         id: '2',
-//         source: require('../../assets/images/explore2.png'),
-//         caption: 'Explore the vibrant cityscapes',
-//     },
-//     // {
-//     //     id: '3',
-//     //     source: require('./path-to-your-image3.jpg'),
-//     //     caption: 'Dive into the serene beaches',
-//     // },
-// ];
-
-// const ExplorePage: React.FC = () => {
-//     const renderItem = ({ item }: { item: { id: string; source: any; caption: string } }) => (
-//         <View style={styles.itemContainer}>
-//             <Image source={item.source} style={styles.image} resizeMode="cover" />
-//             <View style={styles.overlay}>
-//                 <Text style={styles.caption}>{item.caption}</Text>
-//             </View>
-//         </View>
-//     );
-
-//     return (
-//         <FlatList
-//             data={exploreItems}
-//             keyExtractor={(item) => item.id}
-//             renderItem={renderItem}
-//             pagingEnabled
-//             showsVerticalScrollIndicator={false}
-//             style={styles.container}
-//         />
-//     );
-// };
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: '#000', // Dark background for an immersive experience
-//     },
-//     itemContainer: {
-//         height, // Full-screen height for each item
-//         width,  // Full-screen width for each item
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         position: 'relative',
-//     },
-//     image: {
-//         height: '100%',
-//         width: '100%',
-//     },
-//     overlay: {
-//         position: 'absolute',
-//         bottom: 30,
-//         left: 20,
-//         right: 20,
-//         padding: 10,
-//         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//         borderRadius: 8,
-//     },
-//     caption: {
-//         color: '#fff',
-//         fontSize: 16,
-//         fontWeight: 'bold',
-//     },
-// });
-
-// export default ExplorePage;
-
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View, Dimensions } from 'react-native';
 import EventDetails from '../stuff/EventDetails'; // Import the EventDetails component
 
+const { height } = Dimensions.get('window');
+
+const eventData = [
+    {
+        id: '1',
+        title: 'Moody Center Art Show',
+        date: '24 December 2024',
+        time: 'Sunday, 4:00 PM - 9:00 PM',
+        location: '2001 Robert Dedman Dr, Austin, TX 78712',
+        organizer: 'Ashwin Pahl',
+        description:
+            'Discover the latest in streetwear and sustainable fashion at this exclusive event, where emerging designers and local brands showcase their unique collections.',
+        attendeesImage: require('../../assets/images/people.png'), // Correct attendees image
+        headerImage: require('../../assets/images/popup1.png'), // Correct header image
+    },
+    {
+        id: '2',
+        title: 'Downtown Music Festival',
+        date: '5 January 2025',
+        time: 'Friday, 6:00 PM - 11:00 PM',
+        location: '500 Congress Ave, Austin, TX 78701',
+        organizer: 'Riley Thompson',
+        description:
+            'Join us for an unforgettable night of live music featuring local and international artists in the heart of downtown Austin.',
+        attendeesImage: require('../../assets/images/people.png'), // Correct attendees image
+        headerImage: require('../../assets/images/header2.jpg'), // Correct header image
+    },
+    {
+        id: '3',
+        title: 'Foodies Paradise Fest',
+        date: '14 February 2025',
+        time: 'Saturday, 12:00 PM - 8:00 PM',
+        location: 'Zilker Park, Austin, TX 78704',
+        organizer: 'Jessica Wong',
+        description:
+            'Indulge in a culinary adventure at Foodies Paradise Fest, where top chefs and food vendors come together to showcase mouthwatering dishes.',
+        attendeesImage: require('../../assets/images/people.png'), // Correct attendees image
+        headerImage: require('../../assets/images/header3.jpg'), // Correct header image
+    },
+];
+
 const ExplorePage: React.FC = () => {
-    return (
-        <View style={styles.container}>
-            <EventDetails /> {/* Render the EventDetails component */}
+    const renderItem = ({ item }: { item: typeof eventData[0] }) => (
+        <View style={styles.pageContainer}>
+            <EventDetails
+                title={item.title}
+                date={item.date}
+                time={item.time}
+                location={item.location}
+                organizer={item.organizer}
+                description={item.description}
+                attendeesImage={item.attendeesImage}
+                headerImage={item.headerImage}
+            />
         </View>
+    );
+
+    return (
+        <FlatList
+            data={eventData}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            pagingEnabled // Enable paging for vertical snapping
+            showsVerticalScrollIndicator={false} // Hide the vertical scroll indicator for a clean look
+            snapToInterval={height} // Ensure items snap to the full height of the screen
+            decelerationRate="fast" // Faster deceleration for a snappy feel
+            bounces={false} // Prevents bouncing at the start/end of the list
+        />
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
+    pageContainer: {
+        height, // Full screen height for each page
+        flex: 1, // Ensure the page takes up the full available space
     },
 });
 

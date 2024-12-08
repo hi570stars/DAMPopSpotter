@@ -11,7 +11,8 @@
     "ios": {
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "We need your permission to access your photo library.",
-        "NSPhotoLibraryAddUsageDescription": "We need your permission to save photos to your library."
+        "NSPhotoLibraryAddUsageDescription": "We need your permission to save photos to your library.",
+        "NSCalendarsUsageDescription": "This app requires access to your calendar to add events."
       },
       "supportsTablet": true
     },
@@ -19,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.DAMPopSpotter"
     },
     "web": {
       "bundler": "metro",
