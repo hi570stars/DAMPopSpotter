@@ -18,7 +18,7 @@ const MAPPING = {
   // Add new icons here:
   'compass.fill': 'explore',
   'map.fill': 'map',
-  'add.circle.fill': 'add-circle',
+  'add.circle.fill': 'add_circle',
   'person.circle.fill': 'account-circle',
 } as Partial<
   Record<

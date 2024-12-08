@@ -36,7 +36,7 @@ export default function TabLayout() {
       name="explore"
       options={{
         title: 'Explore',
-        tabBarIcon: ({ color }) => <IconSymbol size={28} name="compass.fill" color={color} />,
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="safari.fill" color={color} />,
       }}
     />
     <Tabs.Screen
@@ -50,7 +50,7 @@ export default function TabLayout() {
       name="create"
       options={{
         title: 'Create',
-        tabBarIcon: ({ color }) => <IconSymbol size={28} name="add.circle.fill" color={color} />,
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="plus.app.fill" color={color} />,
       }}
     />
     <Tabs.Screen
