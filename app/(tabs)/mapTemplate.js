@@ -109,8 +109,11 @@ export const mapTemplate = `
           const icon = iconMapping[location.icon] || iconMapping.default;
 
           const marker = L.marker([location.latitude, location.longitude], { icon }).addTo(map);
-          marker.bindPopup('<div class="popup-content"><strong>' + location.title + '</strong><br>' + location.description + '</div>');
 
+          // Removed bindPopup to suppress popup display
+          // marker.bindPopup('<div class="popup-content"><strong>' + location.title + '</strong><br>' + location.description + '</div>');
+
+          // Send marker click data to React Native
           marker.on('click', () => {
             const message = JSON.stringify({ id: location.id, title: location.title });
             window.ReactNativeWebView.postMessage(message);

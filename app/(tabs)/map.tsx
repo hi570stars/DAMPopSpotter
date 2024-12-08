@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { mapTemplate } from './mapTemplate';
+import EventDetailsMap from '../stuff/EventDetailsMap';
+
+const screenHeight = Dimensions.get('screen').height;
 
 const MapPage = () => {
   const [locations, setLocations] = useState([]);
   const [filteredLocations, setFilteredLocations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const webviewRef = useRef(null);
 
   useEffect(() => {
@@ -21,7 +24,6 @@ const MapPage = () => {
     ];
     setLocations(mockLocations);
     setFilteredLocations(mockLocations);
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -40,34 +42,19 @@ const MapPage = () => {
   const handleWebViewMessage = (event) => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
-      if (data.error) {
-        Alert.alert('WebView Error', data.error);
-        return;
-      }
-      if (data.status === 'Map Initialized') {
-        sendMarkers(filteredLocations);
+      if (data.id && data.title) {
+        setSelectedEvent(data);
+        setModalVisible(true);
       }
     } catch (error) {
       console.error('Error parsing message from WebView:', error);
     }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#A1CEDC" />
-        <Text style={styles.loadingText}>Loading map...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>Error loading map data: {error}</Text>
-      </View>
-    );
-  }
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedEvent(null);
+  };
 
   return (
     <View style={styles.container}>
@@ -79,6 +66,7 @@ const MapPage = () => {
         onMessage={handleWebViewMessage}
         javaScriptEnabled
         domStorageEnabled
+        onLoad={() => sendMarkers(filteredLocations)}
       />
       <View style={styles.filterContainer}>
         {['music', 'thrift', 'market', 'food', 'misc', 'all'].map(type => (
@@ -91,6 +79,31 @@ const MapPage = () => {
           </TouchableOpacity>
         ))}
       </View>
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeModal}
+      >
+        {/* <View
+          style={styles.modalContainer}
+          onStartShouldSetResponder={() => {
+            closeModal();
+            return true;
+          }}
+        > */}
+        <TouchableOpacity
+          style={styles.modalContainer}
+          onPress={closeModal}>
+        </TouchableOpacity>
+          {selectedEvent && (
+            <EventDetailsMap
+              event={selectedEvent}
+              onClose={closeModal}
+            />
+          )}
+        {/* </View> */}
+      </Modal>
     </View>
   );
 };
@@ -101,24 +114,6 @@ const styles = StyleSheet.create({
   },
   webview: {
     flex: 1,
-    margin: 0,
-    padding: 0,
-  },
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#555',
-  },
-  errorText: {
-    fontSize: 16,
-    color: 'red',
-    textAlign: 'center',
-    paddingHorizontal: 20,
   },
   filterContainer: {
     position: 'absolute',
@@ -142,11 +137,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFC4C4',
   },
   activeButton: {
-    backgroundColor: '#A1CEDC',
+    backgroundColor: '#FFB55B',
   },
   filterText: {
     fontSize: 14,
     color: '#333',
+  },
+  modalContainer: {
+    flex: .1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
   },
 });
 
