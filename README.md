@@ -17,8 +17,8 @@ Product:
 
 # Tech Stack and How to use
 
-Front-End: React-Native
-Back-End: Firebase
+- Front-End: React-Native
+- Back-End: Firebase
 
 ## Step 1: Download Expo Go from App/Play Store on mobile device
 ## Step 2: After cloning repository, run 'npm install' to install all necessary packages and dependencies
