@@ -46,7 +46,7 @@ export const mapTemplate = `
         zoomControl: false,
         maxBounds: bounds, // Restrict map panning to bounds
         maxBoundsViscosity: 1.0 // Prevent dragging out of bounds
-      }).setView([30.2850, -97.7335], 14); // Set initial center and zoom
+      }).setView([30.28, -97.7345], 14); // Set initial center and zoom
 
       // Add OpenStreetMap Standard tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -67,31 +67,31 @@ export const mapTemplate = `
 
         const iconMapping = {
           music: L.icon({
-            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconUrl: 'https://imgur.com/BUnBLOc.png',
             iconSize: [40, 40],
             iconAnchor: [20, 40],
             popupAnchor: [0, -40],
           }),
           market: L.icon({
-            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconUrl: 'https://imgur.com/lWmKiJu.png',
             iconSize: [40, 40],
             iconAnchor: [20, 40],
             popupAnchor: [0, -40],
           }),
           thrift: L.icon({
-            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconUrl: 'https://imgur.com/8tIyeTC.png',
             iconSize: [40, 40],
             iconAnchor: [20, 40],
             popupAnchor: [0, -40],
           }),
           food: L.icon({
-            iconUrl: 'https://i.imgur.com/2KREiK8.png',
-            iconSize: [40, 40],
+            iconUrl: 'https://imgur.com/P7VdhcW.png',
+            iconSize: [45, 40],
             iconAnchor: [20, 40],
             popupAnchor: [0, -40],
           }),
           misc: L.icon({
-            iconUrl: 'https://i.imgur.com/2KREiK8.png',
+            iconUrl: 'https://imgur.com/o2SzYqm.png',
             iconSize: [40, 40],
             iconAnchor: [20, 40],
             popupAnchor: [0, -40],

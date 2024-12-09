@@ -18,9 +18,24 @@ const MapPage = () => {
     const mockLocations = [
       { id: 1, title: 'Turtle Pond', description: 'Turtle Pond', latitude: 30.2869, longitude: -97.7395, icon: 'misc' },
       { id: 2, title: 'Thrift Shop', description: 'Thrift description', latitude: 30.2675, longitude: -97.7435, icon: 'thrift' },
-      { id: 3, title: 'Food Festival', description: 'Food description', latitude: 30.2677, longitude: -97.7435, icon: 'food' },
-      { id: 4, title: 'Market', description: 'Market description', latitude: 30.2673, longitude: -97.7435, icon: 'market' },
+      { id: 3, title: 'Food Festival', description: 'Food description', latitude: 30.27, longitude: -97.7435, icon: 'food' },
+      { id: 4, title: 'Market', description: 'Market description', latitude: 30.2673, longitude: -97.74, icon: 'market' },
       { id: 5, title: "Tweedy's Bar", description: 'Band performance.', latitude: 30.295521, longitude: -97.741753, icon: 'music' },
+      { id: 6, title: "Moody Center Art Show", description: 'Art Show.', latitude: 30.281099, longitude: -97.730591, icon: 'misc' },
+      { id: 7, title: "Downtown Music Festival", description: 'Live Music Night', latitude: 30.267421, longitude: -97.743505, icon: 'music' },
+      { id: 8, title: "8", description: 'Band performance.', latitude: 30.295521, longitude: -97.73, icon: 'market' },
+      { id: 9, title: "9", description: 'Band performance.', latitude: 30.295521, longitude: -97.741753, icon: 'music' },
+      { id: 10, title: "10", description: 'Band performance.', latitude: 30.295521, longitude: -97.741753, icon: 'music' },
+      { id: 11, title: "11", description: 'Band performance.', latitude: 30.28, longitude: -97.72, icon: 'music' },
+      { id: 12, title: "12", description: 'Band performance.', latitude: 30.28, longitude: -97.741753, icon: 'music' },
+      { id: 13, title: "13", description: 'Band performance.', latitude: 30.295521, longitude: -97.741753, icon: 'music' },
+      { id: 14, title: "14", description: 'Band performance.', latitude: 30.296519, longitude: -97.742273, icon: 'thrift' },
+      { id: 15, title: "15", description: 'Band performance.', latitude: 30.304197, longitude: -97.726689, icon: 'food' },
+      { id: 16, title: "16", description: 'Band performance.', latitude: 30.295521, longitude: -97.741753, icon: 'music' },
+      { id: 17, title: "17", description: 'Band performance.', latitude: 30.3, longitude: -97.741753, icon: 'music' },
+      { id: 18, title: "18", description: 'Band performance.', latitude: 30.2961, longitude: -97.744, icon: 'music' },
+      { id: 19, title: "19", description: 'Band performance.', latitude: 30.285, longitude: -97.745, icon: 'music' },
+      { id: 20, title: "20", description: 'Band performance.', latitude: 30.270090, longitude: -97.731270, icon: 'food' },
     ];
     setLocations(mockLocations);
     setFilteredLocations(mockLocations);
