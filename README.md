@@ -1,4 +1,4 @@
-### This is the code repository for the PopSpotter team of Digital Arts & Media.
+# This is the code repository for the PopSpotter team of Digital Arts & Media.
 
 ### <ins>Members</ins>
 Tech:
@@ -15,7 +15,7 @@ Product:
 - Sachi Sooda
 - Arway Fahad
 
-### Tech Stack and How to use
+# Tech Stack and How to use
 
 Front-End: React-Native
 Back-End: Firebase
@@ -25,4 +25,4 @@ Back-End: Firebase
 ## Step 3: Run 'npx expo start'
 ## Step 4: Scan qr code from the terminal with your phone
 It should route to the Expo Go app and begin loading the app on your device.
-# Note: Your machine and mobile device need to be on the same network in order to work properly, often networks like utexas do not work for this.
+### Note: Your machine and mobile device need to be on the same network in order to work properly, often networks like utexas do not work for this.
